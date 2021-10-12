@@ -6,6 +6,22 @@
  * Detailed information about configuring a multi-project build in Gradle can be found
  * in the user manual at https://docs.gradle.org/6.7.1/userguide/multi_project_builds.html
  */
+pluginManagement{
+    repositories {
+        mavenLocal()
+        maven("https://plugins.gradle.org/m2/")
+    }
+    // The resolutionStrategy only needs to be configured for 
+    // local plugin development, specifically when using the 
+    // mavenLocal repository.
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "com.google.protobuf") {
+                useModule("com.google.protobuf:protobuf-gradle-plugin:${requested.version}")
+            }
+        }
+    }
+}
 
 rootProject.name = "helloGrpc"
 include("app")

@@ -9,14 +9,18 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("com.google.protobuf") version "0.8.17"
+    idea
 }
 
 repositories {
     // Use JCenter for resolving dependencies.
+    mavenCentral()
     jcenter()
 }
 
 dependencies {
+
     // Use JUnit Jupiter API for testing.
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
 
