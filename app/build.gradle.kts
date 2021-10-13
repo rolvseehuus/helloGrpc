@@ -14,21 +14,19 @@ repositories {
 }
 
 dependencies {
+    testImplementation("io.grpc:grpc-testing:1.15.1")
 
-    // Use JUnit Jupiter API for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    // Use JUnit test framework.
+    testImplementation("junit:junit:4.13")
+    //    testImplementation("org.mockito:mockito-core:3.4.0")
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:29.0-jre")
 
     // Protobuf and grpc deps
     implementation("com.google.protobuf:protobuf-java:3.6.1")
-    // Not needed - thus far. Keeping around.
-    //    implementation("io.grpc:grpc-stub:1.15.1")
-    //    implementation("io.grpc:grpc-protobuf:1.15.1")
+    implementation("io.grpc:grpc-stub:1.15.1")
+    implementation("io.grpc:grpc-protobuf:1.15.1")
 }
 
 application {
@@ -36,13 +34,24 @@ application {
     mainClass.set("helloGrpc.App")
 }
 
-tasks.test {
-    // Use junit platform for unit tests.
-    useJUnitPlatform()
-}
 
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:3.6.0"
+    }
+
+    /*
+      It's necessary to first add the grpc-plugin, demonstrated in the 'plugins' section, and then 
+      enable the grpc-plugin where relevant, as done in the generateProtoTasks section.
+    */
+
+    plugins {
+        id("grpc") { artifact = "io.grpc:protoc-gen-grpc-java:1.15.1" }
+    }
+
+    generateProtoTasks {
+        all().forEach() {
+            it.plugins { id("grpc") }
+        }
     }
 }
