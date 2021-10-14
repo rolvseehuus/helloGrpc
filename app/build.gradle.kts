@@ -31,9 +31,8 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("helloGrpc.App")
+    mainClass.set("helloGrpc.HelloWorldServer")
 }
-
 
 protobuf {
     protoc {
@@ -53,5 +52,41 @@ protobuf {
         all().forEach() {
             it.plugins { id("grpc") }
         }
+    }
+}
+
+
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+sourceSets {
+    main {
+        java {
+            srcDirs("build/generated/source/proto/main/grpc")
+            srcDirs("build/generated/source/proto/main/java")
+        }
+    }
+}
+
+
+tasks {
+    register<CreateStartScripts>("helloWorldServer"){
+        mainClassName="helloGrpc.HelloWorldServer"
+        applicationName="hello-world-server"
+        outputDir = file("$buildDir/tmp")
+        classpath = startScripts.get().classpath
+    }
+
+    register<CreateStartScripts>("helloWorldClient"){
+        mainClassName="helloGrpc.HelloWorldClient"
+        applicationName="hello-world-client"
+        outputDir = file("$buildDir/tmp")
+        classpath=startScripts.get().classpath
+    }
+}
+
+application {
+    applicationDistribution.into("bin"){
+        from(tasks.named("helloWorldClient"))
+        from(tasks.named("helloWorldServer"))
+        fileMode = "0755".toInt(8)
     }
 }

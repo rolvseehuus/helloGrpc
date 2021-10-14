@@ -1,7 +1,7 @@
 package helloGrpc;
 import static org.junit.Assert.*;
 
-import helloGrpc.App.GreeterImpl;
+import helloGrpc.HelloWorldServer.GreeterImpl;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
@@ -43,7 +43,6 @@ public class AppTest {
     GreeterGrpc.GreeterBlockingStub blockingStub = GreeterGrpc.newBlockingStub(
         // Create a client channel and register for automatic graceful shutdown.
         grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build()));
-
 
     HelloReply reply =
         blockingStub.sayHello(HelloRequest.newBuilder().setName( "test name").build());
